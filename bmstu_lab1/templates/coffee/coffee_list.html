@@ -1,35 +1,33 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div class="coffee-header">
-    <h1>Рецепты кофе</h1>
-    <form method="get" class="search-form">
-        <input type="text" name="search" placeholder="Поиск рецептов..." value="{{ search_query }}">
-        <button type="submit">Найти</button>
-    </form>
-</div>
+<div class="container">
+    <h1>Наши рецепты кофе</h1>
 
-<div class="recipe-grid">
-    {% for recipe in recipes %}
-    <div class="recipe-card">
-        {% if recipe.image_url %}
-        <img src="{{ recipe.image_url }}" alt="{{ recipe.name }}" class="recipe-image">
-        {% endif %}
-        <h2>{{ recipe.name }}</h2>
-        <div class="ingredients">
-            <p><strong>Молоко:</strong> {{ recipe.milk_ml }} мл</p>
-            <p><strong>Эспрессо:</strong> {{ recipe.espresso_ml }} мл</p>
-            {% if recipe.vanilla_syrup_tsp > 0 %}
-            <p><strong>Ванильный сироп:</strong> {{ recipe.vanilla_syrup_tsp }} ч/л</p>
-            {% endif %}
-            {% if recipe.cinnamon_tsp > 0 %}
-            <p><strong>Корица:</strong> {{ recipe.cinnamon_tsp }} ч/л</p>
-            {% endif %}
+    <form method="get" class="mb-4">
+        <input type="text" name="search" placeholder="Поиск рецептов..." value="{{ search_query }}">
+        <button type="submit" class="btn btn-primary">Найти</button>
+    </form>
+
+    <div class="row">
+        {% for recipe in recipes %}
+        <div class="col-md-4 mb-4">
+            <div class="card h-100">
+                <img src="{{ recipe.image_url }}" class="card-img-top" alt="{{ recipe.name }}">
+                <div class="card-body">
+                    <h5 class="card-title">{{ recipe.name }}</h5>
+                    <p class="card-text">{{ recipe.description }}</p>
+                    <p class="text-muted">
+                        Цена: {{ recipe.price|default:recipe.calculated_price }} ₽
+                    </p>
+                </div>
+                <div class="card-footer">
+                    <a href="{% url 'recipe_detail' recipe.id %}" class="btn btn-info">Подробнее</a>
+                    <a href="{% url 'add_to_cart' 'recipe' recipe.id %}" class="btn btn-success">В корзину</a>
+                </div>
+            </div>
         </div>
-        <a href="{% url 'coffee_detail' recipe.id %}" class="btn">Подробнее</a>
+        {% endfor %}
     </div>
-    {% empty %}
-    <p>Рецепты не найдены</p>
-    {% endfor %}
 </div>
 {% endblock %}

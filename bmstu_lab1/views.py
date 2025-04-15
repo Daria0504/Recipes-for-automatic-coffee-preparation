@@ -1,98 +1,61 @@
-from django.shortcuts import render, get_object_or_404
-from .models import CoffeeRecipe
+from django.shortcuts import render
 
-# Начальные данные для рецептов (можно заменить на загрузку из БД)
-coffee_recipes = [
-    {
-        "id": 1,
-        "name": "Ванильный латте",
-        "milk_ml": 175,
-        "espresso_ml": 50,
-        "vanilla_syrup_tsp": 2,
-        "cinnamon_tsp": 1,
-        "ground_coffee_g": 15,
-        "honey_g": 0,
-        "description": "Нежный латте с ванильным сиропом и легкой ноткой корицы",
-        "image_url": "http://127.0.0.1:3010/coffee-images/vanilla_latte.jpg"
-    },
-    {
-        "id": 2,
-        "name": "Холодный латте",
-        "milk_ml": 175,
-        "espresso_ml": 50,
-        "vanilla_syrup_tsp": 0,
-        "cinnamon_tsp": 0,
-        "ground_coffee_g": 15,
-        "honey_g": 5,
-        "description": "Освежающий холодный латте с кубиками льда",
-        "image_url": "http://127.0.0.1:3010/coffee-images/cold_latte.jpg"
-    }
+# MinIO URL
+MINIO_URL = "http://127.0.0.1:3010/coffee-ingredients"
+
+# Коллекция ингредиентов для кофе
+ingredients = [
+    {"id": 1, "name": "Арабика зерно", "price": 1200, "unit": "кг", "description": "Кофейные зерна Арабики с мягким вкусом.", "image_url": f"{MINIO_URL}/arabica_beans.jpg"},
+    {"id": 2, "name": "Робуста молотая", "price": 900, "unit": "кг", "description": "Молотая Робуста с насыщенным вкусом.", "image_url": f"{MINIO_URL}/robusta_ground.jpg"},
+    {"id": 3, "name": "Сироп ваниль", "price": 350, "unit": "бутылка", "description": "Сироп для придания напитку ванильного аромата.", "image_url": f"{MINIO_URL}/vanilla_syrup.jpg"},
+    {"id": 4, "name": "Корица молотая", "price": 150, "unit": "пакет", "description": "Ароматная корица для украшения капучино.", "image_url": f"{MINIO_URL}/cinnamon.jpg"},
+    {"id": 5, "name": "Молоко безлактозное", "price": 80, "unit": "литр", "description": "Нежное безлактозное молоко для латте.", "image_url": f"{MINIO_URL}/lactose_free_milk.jpg"},
 ]
 
+# Рецепт (словарь с id ингредиентов)
+recipe = {
+    1: ingredients[0]  # например, сразу есть Арабика
+}
 
-def coffee_list(request):
-    search_query = request.GET.get("search", "").lower()
+def ingredients_list(request):
+    """Страница списка ингредиентов с фильтрацией и рецептом"""
+    search_query = request.GET.get("search", "").strip().lower()
+    filter_by = request.GET.get("filter_by", "all")
 
+    filtered_ingredients = ingredients
     if search_query:
-        filtered_recipes = [r for r in coffee_recipes
-                            if search_query in r["name"].lower() or
-                            search_query in r["description"].lower()]
-    else:
-        filtered_recipes = coffee_recipes
+        filtered_ingredients = [
+            i for i in ingredients
+            if search_query in i["name"].lower() or search_query in str(i["price"]) or search_query in i["unit"].lower()
+        ]
 
-    return render(request, "coffee/coffee_list.html", {
-        "recipes": filtered_recipes,
-        "search_query": search_query
+    if filter_by == "price":
+        filtered_ingredients = sorted(filtered_ingredients, key=lambda x: x["price"])
+    elif filter_by == "name":
+        filtered_ingredients = sorted(filtered_ingredients, key=lambda x: x["name"].lower())
+
+    return render(request, "./coffee/ingredients_list.html", {
+        "ingredients": filtered_ingredients,
+        "recipe_count": len(recipe),
+        "search_query": search_query,
+        "filter_by": filter_by
     })
 
+def ingredient_detail(request, ingredient_id):
+    """Страница с подробной информацией об ингредиенте"""
+    item = next((i for i in ingredients if i["id"] == ingredient_id), None)
+    return render(request, "./coffee/ingredient_detail.html", {"ingredient": item})
 
-def coffee_detail(request, recipe_id):
-    # recipe = get_object_or_404(CoffeeRecipe, id=recipe_id)
-    # Или для временного решения без БД:
-    recipe = next((r for r in coffee_recipes if r["id"] == recipe_id), None)
-    if not recipe:
-        raise Http404("Рецепт не найден")
+def recipe_detail(request):
+    """Страница текущего рецепта (ингредиенты в рецепте)"""
+    return render(request, "./coffee/recipe_detail.html", {"recipe": recipe})
 
-    return render(request, "coffee/coffee_detail.html", {
-        "recipe": recipe
-    })
-from django.shortcuts import render, redirect, get_object_or_404
-from .models import CoffeeRecipe
+def add_to_recipe(request, ingredient_id):
+    """Добавление ингредиента в рецепт через POST-запрос"""
+    global recipe
+    if request.method == "POST":
+        ingredient = next((i for i in ingredients if i["id"] == ingredient_id), None)
+        if ingredient:
+            recipe[ingredient_id] = ingredient  # Добавляем или заменяем ингредиент в рецепте
 
-def home(request):
-    return render(request, 'home.html')
-
-def send_text(request):
-    if request.method == 'POST':
-        text = request.POST.get('text', '')
-        # Обработка текста
-        return render(request, 'text_received.html', {'text': text})
-    return redirect('home')
-
-def checkout(request):
-    # Логика оформления заказа
-    return render(request, 'checkout.html')
-def cart_detail(request):
-    # Логика отображения корзины (можно временно просто рендерить шаблон)
-    return render(request, 'cart/detail.html')
-
-
-from django.shortcuts import redirect
-
-
-def cart_add(request, product_id):
-    # Получаем или создаем корзину в сессии
-    cart = request.session.get('cart', {})
-
-    # Добавляем товар или увеличиваем количество
-    cart[str(product_id)] = cart.get(str(product_id), 0) + 1
-
-    # Сохраняем корзину в сессии
-    request.session['cart'] = cart
-
-    # Перенаправляем обратно на страницу товара
-    return redirect('coffee_detail', recipe_id=product_id)
-def cart_detail(request):
-    cart = request.session.get('cart', {})
-    # Здесь можно добавить логику получения объектов товаров по ID из корзины
-    return render(request, 'cart/detail.html', {'cart': cart})
+    return ingredients_list(request)

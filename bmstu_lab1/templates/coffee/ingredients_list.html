@@ -1,0 +1,36 @@
+<!-- ingredients_list.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Ингредиенты для кофе</title>
+</head>
+<body>
+    <h1>Ингредиенты для кофе</h1>
+
+    <form method="get">
+        <input type="text" name="search" value="{{ search_query }}" placeholder="Поиск ингредиента...">
+        <select name="filter_by">
+            <option value="all" {% if filter_by == "all" %}selected{% endif %}>Без сортировки</option>
+            <option value="price" {% if filter_by == "price" %}selected{% endif %}>По цене</option>
+            <option value="name" {% if filter_by == "name" %}selected{% endif %}>По названию</option>
+        </select>
+        <button type="submit">Найти</button>
+    </form>
+
+    <p><a href="{% url 'recipe_detail' %}">Перейти к рецепту ({{ recipe_count }})</a></p>
+
+    <ul>
+        {% for ingredient in ingredients %}
+            <li>
+                <h3><a href="{% url 'ingredient_detail' ingredient.id %}">{{ ingredient.name }}</a></h3>
+                <img src="{{ ingredient.image_url }}" alt="{{ ingredient.name }}" width="150">
+                <p>Цена: {{ ingredient.price }} / {{ ingredient.unit }}</p>
+                <form method="post" action="{% url 'add_to_recipe' ingredient.id %}">
+                    {% csrf_token %}
+                    <button type="submit">Добавить в рецепт</button>
+                </form>
+            </li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
