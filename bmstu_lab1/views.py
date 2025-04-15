@@ -5,11 +5,11 @@ MINIO_URL = "http://127.0.0.1:3010/coffee-ingredients"
 
 # Коллекция ингредиентов для кофе
 ingredients = [
-    {"id": 1, "name": "Арабика зерно", "price": 1200, "unit": "кг", "description": "Кофейные зерна Арабики с мягким вкусом.", "image_url": f"{MINIO_URL}/arabica_beans.jpg"},
-    {"id": 2, "name": "Робуста молотая", "price": 900, "unit": "кг", "description": "Молотая Робуста с насыщенным вкусом.", "image_url": f"{MINIO_URL}/robusta_ground.jpg"},
-    {"id": 3, "name": "Сироп ваниль", "price": 350, "unit": "бутылка", "description": "Сироп для придания напитку ванильного аромата.", "image_url": f"{MINIO_URL}/vanilla_syrup.jpg"},
-    {"id": 4, "name": "Корица молотая", "price": 150, "unit": "пакет", "description": "Ароматная корица для украшения капучино.", "image_url": f"{MINIO_URL}/cinnamon.jpg"},
-    {"id": 5, "name": "Молоко безлактозное", "price": 80, "unit": "литр", "description": "Нежное безлактозное молоко для латте.", "image_url": f"{MINIO_URL}/lactose_free_milk.jpg"},
+    {"id": 1, "name": "Арабика зерно", "price": 1200, "unit": "кг", "description": "Кофейные зерна Арабики с мягким вкусом.", "image_url": f"https://avatars.mds.yandex.net/i?id=a8deb437a71ae50a2c17ef582bcb389a-5315630-images-thumbs&ref=rim&n=33&w=142&h=200"},
+    {"id": 2, "name": "Робуста молотая", "price": 900, "unit": "кг", "description": "Молотая Робуста с насыщенным вкусом.", "image_url": f"https://cdn1.ozone.ru/s3/multimedia-f/6052853559.jpg"},
+    {"id": 3, "name": "Сироп ваниль", "price": 350, "unit": "бутылка", "description": "Сироп для придания напитку ванильного аромата.", "image_url": f"https://cdn1.ozone.ru/s3/multimedia-j/6399741247.jpg"},
+    {"id": 4, "name": "Корица молотая", "price": 150, "unit": "пакет", "description": "Ароматная корица для украшения капучино.", "image_url": f"https://avatars.mds.yandex.net/i?id=8b2ca06488a5853e3c61fc358f81c1de46ad34f3-5504402-images-thumbs&n=13"},
+    {"id": 5, "name": "Молоко безлактозное", "price": 80, "unit": "литр", "description": "Нежное безлактозное молоко для латте.", "image_url": f"https://youmarket.shop/images/detailed/97/i_sagc-j1.webp"},
 ]
 
 # Рецепт (словарь с id ингредиентов)
