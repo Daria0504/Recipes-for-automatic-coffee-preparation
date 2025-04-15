@@ -1,20 +1,29 @@
-<!-- ingredient_detail.html -->
+{% load static %}
 <!DOCTYPE html>
-<html>
+<html lang="ru">
 <head>
+    <meta charset="UTF-8">
     <title>{{ ingredient.name }}</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
 </head>
 <body>
-    <h1>{{ ingredient.name }}</h1>
-    <img src="{{ ingredient.image_url }}" alt="{{ ingredient.name }}" width="250">
-    <p><strong>Цена:</strong> {{ ingredient.price }} / {{ ingredient.unit }}</p>
-    <p><strong>Описание:</strong> {{ ingredient.description }}</p>
+    <div class="container">
+        <div class="header">
+            <h1>{{ ingredient.name }}</h1>
+            <a href="{% url 'ingredients_list' %}" class="recipe-button">← Назад</a>
+        </div>
 
-    <form method="post" action="{% url 'add_to_recipe' ingredient.id %}">
-        {% csrf_token %}
-        <button type="submit">Добавить в рецепт</button>
-    </form>
-
-    <p><a href="{% url 'ingredients_list' %}">Назад к списку</a></p>
+        <div class="ingredient-card">
+            <img src="{{ ingredient.image_url }}" alt="{{ ingredient.name }}">
+            <div class="ingredient-info">
+                <p><strong>Цена:</strong> {{ ingredient.price }} / {{ ingredient.unit }}</p>
+                <p><strong>Описание:</strong> {{ ingredient.description }}</p>
+                <form method="post" action="{% url 'add_to_recipe' ingredient.id %}">
+                    {% csrf_token %}
+                    <button type="submit">Добавить в рецепт</button>
+                </form>
+            </div>
+        </div>
+    </div>
 </body>
 </html>

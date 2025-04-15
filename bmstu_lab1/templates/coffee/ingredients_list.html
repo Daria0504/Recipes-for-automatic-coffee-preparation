@@ -1,36 +1,42 @@
-<!-- ingredients_list.html -->
+{% load static %}
 <!DOCTYPE html>
-<html>
+<html lang="ru">
 <head>
+    <meta charset="UTF-8">
     <title>Ингредиенты для кофе</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
 </head>
 <body>
-    <h1>Ингредиенты для кофе</h1>
+    <div class="container">
+        <div class="header">
+            <form method="get" class="search-bar">
+                <input type="text" name="search" placeholder="Поиск" value="{{ search_query }}">
+                <button type="submit">🔍</button>
+            </form>
+            <a href="{% url 'recipe_detail' %}" class="recipe-button">Рецепты кофе</a>
+        </div>
 
-    <form method="get">
-        <input type="text" name="search" value="{{ search_query }}" placeholder="Поиск ингредиента...">
-        <select name="filter_by">
-            <option value="all" {% if filter_by == "all" %}selected{% endif %}>Без сортировки</option>
-            <option value="price" {% if filter_by == "price" %}selected{% endif %}>По цене</option>
-            <option value="name" {% if filter_by == "name" %}selected{% endif %}>По названию</option>
-        </select>
-        <button type="submit">Найти</button>
-    </form>
+        <div class="ingredients-grid">
+            {% for ingredient in ingredients %}
+                <div class="ingredient-card">
+                    <img src="{{ ingredient.image_url }}" alt="{{ ingredient.name }}">
+                    <div class="ingredient-info">
+                        <h3>{{ ingredient.name }}</h3>
+                        <p>{{ ingredient.price }} / {{ ingredient.unit }}</p>
+                        <form method="post" action="{% url 'add_to_recipe' ingredient.id %}">
+                            {% csrf_token %}
+                            <button type="submit">Добавить</button>
+                        </form>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
 
-    <p><a href="{% url 'recipe_detail' %}">Перейти к рецепту ({{ recipe_count }})</a></p>
-
-    <ul>
-        {% for ingredient in ingredients %}
-            <li>
-                <h3><a href="{% url 'ingredient_detail' ingredient.id %}">{{ ingredient.name }}</a></h3>
-                <img src="{{ ingredient.image_url }}" alt="{{ ingredient.name }}" width="150">
-                <p>Цена: {{ ingredient.price }} / {{ ingredient.unit }}</p>
-                <form method="post" action="{% url 'add_to_recipe' ingredient.id %}">
-                    {% csrf_token %}
-                    <button type="submit">Добавить в рецепт</button>
-                </form>
-            </li>
-        {% endfor %}
-    </ul>
+    <footer>
+        <div class="recipe-counter">
+            {{ recipe_count }}
+        </div>
+    </footer>
 </body>
 </html>

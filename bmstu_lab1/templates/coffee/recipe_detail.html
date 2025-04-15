@@ -1,27 +1,34 @@
-<!-- recipe_detail.html -->
+{% load static %}
 <!DOCTYPE html>
-<html>
+<html lang="ru">
 <head>
+    <meta charset="UTF-8">
     <title>Рецепт кофе</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
 </head>
 <body>
-    <h1>Текущий рецепт</h1>
+    <div class="container">
+        <div class="header">
+            <h1>Рецепт кофе</h1>
+            <a href="{% url 'ingredients_list' %}" class="recipe-button">← К ингредиентам</a>
+        </div>
 
-    {% if recipe %}
-        <ul>
-            {% for item in recipe.values %}
-                <li>
-                    <h3>{{ item.name }}</h3>
-                    <img src="{{ item.image_url }}" alt="{{ item.name }}" width="150">
-                    <p>Цена: {{ item.price }} / {{ item.unit }}</p>
-                    <p>{{ item.description }}</p>
-                </li>
-            {% endfor %}
-        </ul>
-    {% else %}
-        <p>Вы ещё не добавили ни одного ингредиента.</p>
-    {% endif %}
-
-    <p><a href="{% url 'ingredients_list' %}">Назад к ингредиентам</a></p>
+        {% if recipe %}
+            <div class="ingredients-grid">
+                {% for item in recipe.values %}
+                    <div class="ingredient-card">
+                        <img src="{{ item.image_url }}" alt="{{ item.name }}">
+                        <div class="ingredient-info">
+                            <h3>{{ item.name }}</h3>
+                            <p>{{ item.price }} / {{ item.unit }}</p>
+                            <p>{{ item.description }}</p>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p>Вы ещё не добавили ни одного ингредиента в рецепт.</p>
+        {% endif %}
+    </div>
 </body>
 </html>
