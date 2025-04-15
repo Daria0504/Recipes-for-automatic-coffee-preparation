@@ -51,7 +51,6 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
-            BASE_DIR / 'templates',  # Глобальные шаблоны
             BASE_DIR / 'bmstu_lab1/templates',  # Шаблоны приложения
         ],
         'APP_DIRS': True,
@@ -75,7 +74,7 @@ DATABASES = {
         'NAME': 'coffe_db',
         'USER': 'dasha',
         'PASSWORD': '1234',
-        'HOST': 'localhost',
+        'HOST': '127.0.0.1',
         'PORT': '5432',
     }
 }
