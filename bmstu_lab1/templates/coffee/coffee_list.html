@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="coffee-header">
+    <h1>Рецепты кофе</h1>
+    <form method="get" class="search-form">
+        <input type="text" name="search" placeholder="Поиск рецептов..." value="{{ search_query }}">
+        <button type="submit">Найти</button>
+    </form>
+</div>
+
+<div class="recipe-grid">
+    {% for recipe in recipes %}
+    <div class="recipe-card">
+        {% if recipe.image_url %}
+        <img src="{{ recipe.image_url }}" alt="{{ recipe.name }}" class="recipe-image">
+        {% endif %}
+        <h2>{{ recipe.name }}</h2>
+        <div class="ingredients">
+            <p><strong>Молоко:</strong> {{ recipe.milk_ml }} мл</p>
+            <p><strong>Эспрессо:</strong> {{ recipe.espresso_ml }} мл</p>
+            {% if recipe.vanilla_syrup_tsp > 0 %}
+            <p><strong>Ванильный сироп:</strong> {{ recipe.vanilla_syrup_tsp }} ч/л</p>
+            {% endif %}
+            {% if recipe.cinnamon_tsp > 0 %}
+            <p><strong>Корица:</strong> {{ recipe.cinnamon_tsp }} ч/л</p>
+            {% endif %}
+        </div>
+        <a href="{% url 'coffee_detail' recipe.id %}" class="btn">Подробнее</a>
+    </div>
+    {% empty %}
+    <p>Рецепты не найдены</p>
+    {% endfor %}
+</div>
+{% endblock %}

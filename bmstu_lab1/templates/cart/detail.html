@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Ваша корзина</h1>
+{% if cart %}
+    <ul>
+    {% for product_id, quantity in cart.items %}
+        <li>Товар {{ product_id }}: {{ quantity }} шт.</li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>Ваша корзина пуста</p>
+{% endif %}
+{% endblock %}

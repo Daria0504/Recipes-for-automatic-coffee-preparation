@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Продукты | Starbucks{% endblock %}
+
+{% block content %}
+<div class="products-container">
+    <h1 class="main-title">Наши продукты</h1>
+
+    <div class="product-grid">
+        {% for product in products %}
+        <div class="product-card">
+            <img src="{{ product.image_url|default:'/static/images/default-product.jpg' }}"
+                 alt="{{ product.name }}" class="product-image">
+            <h3>{{ product.name }}</h3>
+            <p class="price">{{ product.price }} ₽</p>
+            <p class="description">{{ product.description|truncatechars:100 }}</p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

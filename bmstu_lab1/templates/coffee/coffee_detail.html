@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="recipe-detail">
+    {% if recipe.image_url %}
+    <img src="{{ recipe.image_url }}" alt="{{ recipe.name }}" class="detail-image">
+    {% endif %}
+
+    <h1>{{ recipe.name }}</h1>
+
+    <div class="ingredients">
+        <h2>Ингредиенты:</h2>
+        <ul>
+            <li>Молоко: {{ recipe.milk_ml }} мл</li>
+            <li>Эспрессо: {{ recipe.espresso_ml }} мл</li>
+            {% if recipe.vanilla_syrup_tsp > 0 %}
+            <li>Ванильный сироп: {{ recipe.vanilla_syrup_tsp }} ч/л</li>
+            {% endif %}
+            {% if recipe.cinnamon_tsp > 0 %}
+            <li>Корица: {{ recipe.cinnamon_tsp }} ч/л</li>
+            {% endif %}
+            {% if recipe.ground_coffee_g > 0 %}
+            <li>Молотый кофе: {{ recipe.ground_coffee_g }} гр</li>
+            {% endif %}
+            {% if recipe.honey_g > 0 %}
+            <li>Мед: {{ recipe.honey_g }} гр</li>
+            {% endif %}
+        </ul>
+    </div>
+
+    {% if recipe.description %}
+    <div class="description">
+        <h2>Описание:</h2>
+        <p>{{ recipe.description }}</p>
+    </div>
+    {% endif %}
+
+    <a href="{% url 'coffee_list' %}" class="btn">Вернуться к списку</a>
+</div>
+{% endblock %}
+<form action="{% url 'cart_add' recipe.id %}" method="post">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-primary">Добавить в корзину</button>
+</form>

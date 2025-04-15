@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<ul>
+    {% for order in orders %}
+        <li>
+            <!-- Добавляем явную ссылку с проверкой -->
+            <a href="/order/{{ order.id }}/" onclick="console.log('Order ID:', {{ order.id }})">
+                {{ order.title }} (ID: {{ order.id }})
+            </a>
+        </li>
+    {% empty %}
+        <li>Список пуст</li>
+    {% endfor %}
+</ul>
+
+<!-- Для отладки -->
+<script>
+    console.log("Orders data:", {{ orders|safe }});
+</script>
+{% endblock %}
+
+
+
